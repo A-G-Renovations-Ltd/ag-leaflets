@@ -1,0 +1,67 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------
+    // CHANGE THESE: the email addresses that can see the dashboard,
+    // in lower case. They must match the users you add in
+    // Firebase > Authentication > Users.
+    // ---------------------------------------------------------------
+    function isStaff() {
+      return request.auth != null
+        && request.auth.token.get('email', '').lower() in [
+          'marketing@ag-renovations.co.uk'
+        ];
+    }
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function validEvent(d) {
+      return d.keys().hasOnly(['type', 'area', 'street', 'leaflets', 'worker', 'uid',
+                               'roundId', 'at', 'deviceAt', 'hasLocation'])
+        && d.type in ['start', 'street', 'finish']
+        && d.area is string && d.area.size() <= 10
+        && (d.street == null || (d.street is string && d.street.size() <= 80))
+        && d.leaflets is int && d.leaflets >= 0 && d.leaflets <= 5000
+        && d.worker is string && d.worker.size() <= 40
+        && d.uid == request.auth.uid
+        && d.roundId is string
+        && d.at == request.time
+        && d.deviceAt is string
+        && d.hasLocation is bool;
+    }
+
+    // Starts, streets and finishes. Workers can see the team's progress
+    // (no locations in here) and can remove their own mistakes.
+    match /events/{id} {
+      allow read: if signedIn();
+      allow create: if signedIn() && validEvent(request.resource.data);
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isStaff());
+    }
+
+    // The list of workers. Workers' phones read it; only the dashboard can change it.
+    match /settings/{id} {
+      allow read: if signedIn();
+      allow create, update: if isStaff()
+        && request.resource.data.keys().hasOnly(['workers', 'updatedAt'])
+        && request.resource.data.workers is list
+        && request.resource.data.workers.size() <= 50;
+    }
+
+    // Where each tap happened. Only the dashboard can read these.
+    match /locations/{id} {
+      allow read: if isStaff();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['lat', 'lng', 'accuracy', 'uid', 'at'])
+        && request.resource.data.lat is number
+        && request.resource.data.lng is number
+        && request.resource.data.accuracy is number
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.at == request.time;
+      allow delete: if signedIn() && (resource.data.uid == request.auth.uid || isStaff());
+    }
+  }
+}

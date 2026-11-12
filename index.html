@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E3E5E8">
+<title>A&amp;G leaflet round</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Semi+Condensed:wght@600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="worker">
+<main id="app" aria-live="polite">
+  <div class="message"><p>Loading…</p></div>
+</main>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-backdrop" data-sheet="close"></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-title"></div>
+</div>
+
+<div id="toast" class="toast" role="status" hidden></div>
+
+<noscript><p class="message">This page needs JavaScript turned on.</p></noscript>
+<script type="module" src="worker.js"></script>
+</body>
+</html>
