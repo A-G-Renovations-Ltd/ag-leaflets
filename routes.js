@@ -11,7 +11,7 @@ export const AREAS = [
   // Box 1: Hornsey N8 7LL (route sheet 6). Aiden, Fri 13 and Sat 14 Nov.
   {
     id: 'N8',
-    name: 'Hornsey',
+    name: 'Box 1 · Hornsey',
     target: 1500,
     startPoint: 'North View Road (walk from Hornsey station)',
     streets: [
@@ -40,7 +40,7 @@ export const AREAS = [
 //  // Box 2: Isle of Dogs E14 3WQ (route sheet 3). Michael + Martin, Sat 14 Nov.
 //  {
 //    id: 'E14',
-//    name: 'Isle of Dogs',
+//    name: 'Box 2 · Isle of Dogs',
 //    target: 1500,
 //    startPoint: 'Westferry Road, by number 409 (Island Gardens station)',
 //    streets: [
@@ -62,7 +62,7 @@ export const AREAS = [
 //  // Box 3: Hackney E8 1NT (route sheet 2). Aiden, Sun 15 and Tue 17 Nov.
 //  {
 //    id: 'E8',
-//    name: 'Hackney',
+//    name: 'Box 3 · Hackney',
 //    target: 1500,
 //    startPoint: 'Greenwood Road, by Fassett Road (Hackney Downs station)',
 //    streets: [
