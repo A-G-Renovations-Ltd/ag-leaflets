@@ -30,34 +30,33 @@ export const AREAS = [
     ],
     extra: ['Rectory Gardens', 'Eastfield Road', 'Brook Road', 'Nightingale Lane'],
   },
+  // Box 2: Isle of Dogs E14 3WQ (route sheet 3). Michael + Martin, Sat 14 Nov.
+  {
+    id: 'E14',
+    name: 'Box 2 · Isle of Dogs',
+    target: 1500,
+    startPoint: 'Westferry Road, by number 409 (Island Gardens station)',
+    streets: [
+      'Westferry Road',
+      'Wynan Road',
+      'Pointers Close',
+      'Rainbow Avenue',
+      'Chapel House Street',
+      'Thermopylae Gate',
+      'Macquarie Way',
+      'East Ferry Road',
+      'Manchester Grove',
+      'Manchester Road',
+      'Ferry Street',
+    ],
+    extra: ['Spindrift Avenue', 'Harbinger Road', 'Cahir Street'],
+  },
 ];
 
 // ------------------------------------------------------------------
 // Coming up. Not shown to the workers yet. To switch one on, move it
 // into AREAS above (and take out any area that's finished).
 // ------------------------------------------------------------------
-//
-//  // Box 2: Isle of Dogs E14 3WQ (route sheet 3). Michael + Martin, Sat 14 Nov.
-//  {
-//    id: 'E14',
-//    name: 'Box 2 · Isle of Dogs',
-//    target: 1500,
-//    startPoint: 'Westferry Road, by number 409 (Island Gardens station)',
-//    streets: [
-//      'Westferry Road',
-//      'Wynan Road',
-//      'Pointers Close',
-//      'Rainbow Avenue',
-//      'Chapel House Street',
-//      'Thermopylae Gate',
-//      'Macquarie Way',
-//      'East Ferry Road',
-//      'Manchester Grove',
-//      'Manchester Road',
-//      'Ferry Street',
-//    ],
-//    extra: ['Spindrift Avenue', 'Harbinger Road', 'Cahir Street'],
-//  },
 //
 //  // Box 3: Hackney E8 1NT (route sheet 2). Aiden, Sun 15 and Tue 17 Nov.
 //  {
