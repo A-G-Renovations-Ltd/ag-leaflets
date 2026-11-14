@@ -367,7 +367,21 @@ function sheetConfig(kind, data) {
     return { title: data.street, help: 'How many leaflets did you put through doors on this street?', min: 0, max: 5000, confirm: 'Save street' };
   }
   if (kind === 'finish') {
-    return { title: 'How many leaflets have you got left?', help: "Count what's still in your bag.", min: 0, max: state.round ? state.round.taken : 5000, confirm: 'Finish round' };
+    const r = state.round;
+    const taken = r ? r.taken : 0;
+    const logged = r
+      ? state.events.filter((e) => e.roundId === r.id && e.type === 'street').reduce((s, e) => s + e.leaflets, 0)
+      : 0;
+    const expected = Math.max(0, taken - logged);
+    return {
+      title: 'How many leaflets are LEFT in your bag?',
+      help: `Not how many you delivered. You took ${fmt(taken)} and logged ${fmt(logged)} on streets, so you should have about ${fmt(expected)} left. Count your bag and change the number if it's different. Empty bag = 0.`,
+      min: 0,
+      max: r ? r.taken : 5000,
+      value: r ? Math.min(expected, r.taken) : undefined,
+      taken: r ? r.taken : null,
+      confirm: 'Finish round',
+    };
   }
   const e = state.events.find((x) => x.id === data.id);
   return { title: `Remove ${e ? e.street : 'this street'}?`, help: 'Only do this if you tapped the wrong street.', confirm: 'Remove it', danger: true };
@@ -381,7 +395,8 @@ function openSheet(kind, data = {}) {
     <h2 id="sheet-title" class="sheet-title">${esc(cfg.title)}</h2>
     <p class="sheet-help">${esc(cfg.help)}</p>
     ${hasNumber ? `
-      <input id="num" class="num-input" type="number" inputmode="numeric" pattern="[0-9]*" min="${cfg.min}" max="${cfg.max}" step="1" aria-label="Number of leaflets">
+      <input id="num" class="num-input" type="number" inputmode="numeric" pattern="[0-9]*" min="${cfg.min}" max="${cfg.max}" step="1" aria-label="Number of leaflets"${typeof cfg.value === 'number' ? ` value="${cfg.value}"` : ''}>
+      ${typeof cfg.taken === 'number' ? '<p class="sheet-help" id="delivered-note"></p>' : ''}
       <div class="steppers">
         <button type="button" data-step="-10">−10</button>
         <button type="button" data-step="-1">−1</button>
@@ -397,6 +412,7 @@ function openSheet(kind, data = {}) {
   document.body.classList.add('sheet-open');
   const first = panelEl.querySelector('#num') || panelEl.querySelector('[data-sheet="confirm"]');
   if (first) first.focus();
+  if (hasNumber) updateConfirm();
 }
 
 function closeSheet() {
@@ -425,6 +441,12 @@ function updateConfirm() {
   err.textContent = input.value.trim() !== '' && n === null
     ? `Enter a number from ${fmt(sheet.cfg.min)} to ${fmt(sheet.cfg.max)}.`
     : '';
+  const note = panelEl.querySelector('#delivered-note');
+  if (note) {
+    note.innerHTML = n === null
+      ? ''
+      : `That means you delivered <strong>${fmt(sheet.cfg.taken - n)}</strong> leaflets.`;
+  }
 }
 
 async function confirmSheet() {
